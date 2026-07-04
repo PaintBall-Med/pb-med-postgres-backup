@@ -1,0 +1,16 @@
+{
+  "name": "pb-med-postgres-backup",
+  "version": "1.0.0",
+  "description": "Microservicio de backups PostgreSQL para Paintball Medellin",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1044.0",
+    "@aws-sdk/s3-request-presigner": "^3.1044.0",
+    "express": "^4.21.0"
+  }
+}
