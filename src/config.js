@@ -27,6 +27,8 @@ export const config = {
     endpoint: process.env.S3_ENDPOINT || undefined,
   },
 
+  cronSchedule: process.env.CRON_SCHEDULE || '0 7 * * *',
+
   backup: {
     filePrefix: process.env.BACKUP_FILE_PREFIX || 'backup',
     subfolder: process.env.BUCKET_SUBFOLDER || 'postgres/',

@@ -1,5 +1,6 @@
 import express from 'express'
 import crypto from 'node:crypto'
+import cron from 'node-cron'
 import { config } from './config.js'
 import { dumpAndUpload, streamDump, listBackups, getLatestBackupUrl } from './backup.js'
 import { cleanOldBackups, getBackupStats } from './retention.js'
@@ -81,5 +82,23 @@ app.delete('/backup/cleanup', authenticate, async (req, res) => {
 export function startServer() {
   app.listen(config.port, () => {
     console.log(`Backup API listening on port ${config.port} (mode: ${config.mode})`)
+
+    if (cron.validate(config.cronSchedule)) {
+      cron.schedule(config.cronSchedule, async () => {
+        console.log(`[cron] Starting scheduled backup at ${new Date().toISOString()}`)
+        try {
+          const result = await dumpAndUpload()
+          const cleanup = await cleanOldBackups()
+          console.log(
+            `[cron] Backup complete: ${result.key} (${(result.size / 1024 / 1024).toFixed(2)} MB) | cleanup: ${cleanup.deleted} deleted, ${cleanup.remaining} remaining`
+          )
+        } catch (err) {
+          console.error('[cron] Scheduled backup failed:', err.message)
+        }
+      }, { timezone: 'America/Bogota' })
+      console.log(`Cron scheduled: "${config.cronSchedule}" (America/Bogota)`)
+    } else {
+      console.warn(`Invalid CRON_SCHEDULE: "${config.cronSchedule}" — cron disabled`)
+    }
   })
 }
