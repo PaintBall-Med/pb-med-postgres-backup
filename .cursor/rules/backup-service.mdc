@@ -1,0 +1,46 @@
+---
+description: Reglas operativas del microservicio de backups PostgreSQL
+globs:
+alwaysApply: true
+---
+
+# pb-med-postgres-backup — Reglas operativas
+
+## Arquitectura
+
+- Microservicio independiente que genera dumps PostgreSQL (`pg_dump -Fc`) y los sube a Railway Bucket S3.
+- Corre en Railway como servicio web con cron interno (`node-cron`), NO como cron job de Railway.
+- Un solo servicio: API HTTP (Express) + scheduler (node-cron) en el mismo proceso.
+
+## Reglas criticas
+
+1. **No cambiar `CRON_SCHEDULE` sin confirmar con el usuario.** El schedule actual (`0 7 * * 1`) ejecuta backups cada lunes a las 2 AM Colombia. Cambiar esto afecta la ventana de backup de produccion.
+2. **No loguear ni hardcodear secrets** (`SECRET_TOKEN`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`). Usar siempre `process.env` via `config.js`.
+3. **Mantener `pg_dump` version alineada con PostgreSQL de produccion.** Si se actualiza la DB, actualizar `ARG PG_VERSION` en el Dockerfile. Actualmente: v17.
+4. **No modificar el formato de key S3** (`{subfolder}{prefix}-{timestamp}.dump`). Otros procesos pueden depender de este patron.
+5. **El servicio NO debe tener Serverless habilitado en Railway** — el cron interno requiere que el proceso corra continuamente.
+6. **Retención default: 30 días.** Backups mas antiguos se eliminan automaticamente tras cada backup.
+
+## Convenciones
+
+- JavaScript puro ES modules (sin TypeScript)
+- Sin semicolons, single quotes
+- Logs con `console.log` / `console.error` (no Pino)
+- Timezone: `America/Bogota`
+
+## Archivos clave
+
+| Archivo | Responsabilidad |
+|---------|-----------------|
+| `src/config.js` | Validacion de env vars, fail-fast si faltan |
+| `src/backup.js` | `pg_dump` spawn, upload S3, stream, list, presigned URLs |
+| `src/retention.js` | Limpieza de backups expirados, estadisticas |
+| `src/server.js` | Express API (6 endpoints) + cron schedule |
+| `src/index.js` | Entry point: MODE cron vs server |
+| `Dockerfile` | Multi-stage Alpine con `postgresql17-client` |
+
+## Infraestructura
+
+- **Bucket:** `pb-med-backups` (Railway Bucket S3-compatible)
+- **Dominio:** `pb-med-postgres-backup-production.up.railway.app`
+- **Jira:** Epic SCRUM-318 (Finalizado)

@@ -2,8 +2,6 @@ import { spawn } from 'node:child_process'
 import { createWriteStream, createReadStream, statSync, unlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { createGzip } from 'node:zlib'
-import { pipeline } from 'node:stream/promises'
 import {
   S3Client,
   PutObjectCommand,
