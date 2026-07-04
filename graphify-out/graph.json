@@ -1,0 +1,1829 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "package",
+      "community": 2,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "package_name",
+      "community": 2,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "package_version",
+      "community": 2,
+      "norm_label": "version"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "package_description",
+      "community": 2,
+      "norm_label": "description"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "package_type",
+      "community": 2,
+      "norm_label": "type"
+    },
+    {
+      "label": "main",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "package_main",
+      "community": 2,
+      "norm_label": "main"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "package_scripts",
+      "community": 2,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "package_scripts_start",
+      "community": 2,
+      "norm_label": "start"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "package_scripts_dev",
+      "community": 2,
+      "norm_label": "dev"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "package_dependencies",
+      "community": 2,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "@aws-sdk/client-s3",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "package_dependencies_aws_sdk_client_s3",
+      "community": 2,
+      "norm_label": "@aws-sdk/client-s3"
+    },
+    {
+      "label": "@aws-sdk/s3-request-presigner",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "package_dependencies_aws_sdk_s3_request_presigner",
+      "community": 2,
+      "norm_label": "@aws-sdk/s3-request-presigner"
+    },
+    {
+      "label": "express",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "package_dependencies_express",
+      "community": 2,
+      "norm_label": "express"
+    },
+    {
+      "label": "node-cron",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "package_dependencies_node_cron",
+      "community": 2,
+      "norm_label": "node-cron"
+    },
+    {
+      "label": "backup.js",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_backup",
+      "community": 0,
+      "norm_label": "backup.js"
+    },
+    {
+      "label": "s3",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_backup_s3",
+      "community": 0,
+      "norm_label": "s3"
+    },
+    {
+      "label": "buildKey()",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "src_backup_buildkey",
+      "community": 0,
+      "norm_label": "buildkey()"
+    },
+    {
+      "label": "dumpAndUpload()",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "src_backup_dumpandupload",
+      "community": 0,
+      "norm_label": "dumpandupload()"
+    },
+    {
+      "label": "streamDump()",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "src_backup_streamdump",
+      "community": 0,
+      "norm_label": "streamdump()"
+    },
+    {
+      "label": "listBackups()",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L101",
+      "_origin": "ast",
+      "id": "src_backup_listbackups",
+      "community": 0,
+      "norm_label": "listbackups()"
+    },
+    {
+      "label": "getLatestBackupUrl()",
+      "file_type": "code",
+      "source_file": "src/backup.js",
+      "source_location": "L121",
+      "_origin": "ast",
+      "id": "src_backup_getlatestbackupurl",
+      "community": 0,
+      "norm_label": "getlatestbackupurl()"
+    },
+    {
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "src/config.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_config",
+      "community": 0,
+      "norm_label": "config.js"
+    },
+    {
+      "label": "required",
+      "file_type": "code",
+      "source_file": "src/config.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_config_required",
+      "community": 0,
+      "norm_label": "required"
+    },
+    {
+      "label": "missing",
+      "file_type": "code",
+      "source_file": "src/config.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_config_missing",
+      "community": 0,
+      "norm_label": "missing"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "src/config.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_config_config",
+      "community": 0,
+      "norm_label": "config"
+    },
+    {
+      "label": "index.js",
+      "file_type": "code",
+      "source_file": "src/index.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_index",
+      "community": 0,
+      "norm_label": "index.js"
+    },
+    {
+      "label": "retention.js",
+      "file_type": "code",
+      "source_file": "src/retention.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_retention",
+      "community": 0,
+      "norm_label": "retention.js"
+    },
+    {
+      "label": "s3",
+      "file_type": "code",
+      "source_file": "src/retention.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_retention_s3",
+      "community": 0,
+      "norm_label": "s3"
+    },
+    {
+      "label": "cleanOldBackups()",
+      "file_type": "code",
+      "source_file": "src/retention.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_retention_cleanoldbackups",
+      "community": 0,
+      "norm_label": "cleanoldbackups()"
+    },
+    {
+      "label": "getBackupStats()",
+      "file_type": "code",
+      "source_file": "src/retention.js",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "src_retention_getbackupstats",
+      "community": 0,
+      "norm_label": "getbackupstats()"
+    },
+    {
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "src/server.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_server",
+      "community": 0,
+      "norm_label": "server.js"
+    },
+    {
+      "label": "app",
+      "file_type": "code",
+      "source_file": "src/server.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_server_app",
+      "community": 0,
+      "norm_label": "app"
+    },
+    {
+      "label": "authenticate()",
+      "file_type": "code",
+      "source_file": "src/server.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_server_authenticate",
+      "community": 0,
+      "norm_label": "authenticate()"
+    },
+    {
+      "label": "startServer()",
+      "file_type": "code",
+      "source_file": "src/server.js",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "src_server_startserver",
+      "community": 0,
+      "norm_label": "startserver()"
+    },
+    {
+      "label": "graphify-explorer.md",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer",
+      "community": 5,
+      "norm_label": "graphify-explorer.md"
+    },
+    {
+      "label": "Graphify Explorer Pro \u2014 pb-med-postgres-backup (Ops)",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "community": 5,
+      "norm_label": "graphify explorer pro \u2014 pb-med-postgres-backup (ops)"
+    },
+    {
+      "label": "Cu\u00e1ndo invocar",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_cu\u00e1ndo_invocar",
+      "community": 5,
+      "norm_label": "cuando invocar"
+    },
+    {
+      "label": "Prerequisito",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_prerequisito",
+      "community": 5,
+      "norm_label": "prerequisito"
+    },
+    {
+      "label": "Instrucciones",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_instrucciones",
+      "community": 5,
+      "norm_label": "instrucciones"
+    },
+    {
+      "label": "Repos relacionados",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_repos_relacionados",
+      "community": 5,
+      "norm_label": "repos relacionados"
+    },
+    {
+      "label": "Formato de reporte",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_formato_de_reporte",
+      "community": 5,
+      "norm_label": "formato de reporte"
+    },
+    {
+      "label": "Restricciones",
+      "file_type": "document",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "agents_graphify_explorer_restricciones",
+      "community": 5,
+      "norm_label": "restricciones"
+    },
+    {
+      "label": "SKILL.md",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "backup_operations_skill",
+      "community": 4,
+      "norm_label": "skill.md"
+    },
+    {
+      "label": "Backup Operations \u2014 pb-med-postgres-backup",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "community": 4,
+      "norm_label": "backup operations \u2014 pb-med-postgres-backup"
+    },
+    {
+      "label": "Informacion del servicio",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "backup_operations_skill_informacion_del_servicio",
+      "community": 4,
+      "norm_label": "informacion del servicio"
+    },
+    {
+      "label": "Operaciones",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "backup_operations_skill_operaciones",
+      "community": 6,
+      "norm_label": "operaciones"
+    },
+    {
+      "label": "Health check (sin auth)",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "backup_operations_skill_health_check_sin_auth",
+      "community": 6,
+      "norm_label": "health check (sin auth)"
+    },
+    {
+      "label": "Trigger backup manual",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "backup_operations_skill_trigger_backup_manual",
+      "community": 6,
+      "norm_label": "trigger backup manual"
+    },
+    {
+      "label": "Descargar ultimo backup",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "backup_operations_skill_descargar_ultimo_backup",
+      "community": 6,
+      "norm_label": "descargar ultimo backup"
+    },
+    {
+      "label": "Stream directo de pg_dump",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "backup_operations_skill_stream_directo_de_pg_dump",
+      "community": 6,
+      "norm_label": "stream directo de pg_dump"
+    },
+    {
+      "label": "Listar backups",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "backup_operations_skill_listar_backups",
+      "community": 6,
+      "norm_label": "listar backups"
+    },
+    {
+      "label": "Forzar limpieza",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "backup_operations_skill_forzar_limpieza",
+      "community": 6,
+      "norm_label": "forzar limpieza"
+    },
+    {
+      "label": "Restaurar backup localmente",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "backup_operations_skill_restaurar_backup_localmente",
+      "community": 6,
+      "norm_label": "restaurar backup localmente"
+    },
+    {
+      "label": "Cambiar schedule",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "backup_operations_skill_cambiar_schedule",
+      "community": 4,
+      "norm_label": "cambiar schedule"
+    },
+    {
+      "label": "Ver logs",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L104",
+      "_origin": "ast",
+      "id": "backup_operations_skill_ver_logs",
+      "community": 4,
+      "norm_label": "ver logs"
+    },
+    {
+      "label": "Obtener SECRET_TOKEN",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L111",
+      "_origin": "ast",
+      "id": "backup_operations_skill_obtener_secret_token",
+      "community": 4,
+      "norm_label": "obtener secret_token"
+    },
+    {
+      "label": "Troubleshooting",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "backup_operations_skill_troubleshooting",
+      "community": 4,
+      "norm_label": "troubleshooting"
+    },
+    {
+      "label": "pg_dump version mismatch",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "backup_operations_skill_pg_dump_version_mismatch",
+      "community": 4,
+      "norm_label": "pg_dump version mismatch"
+    },
+    {
+      "label": "Backup timeout",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L123",
+      "_origin": "ast",
+      "id": "backup_operations_skill_backup_timeout",
+      "community": 4,
+      "norm_label": "backup timeout"
+    },
+    {
+      "label": "502 en health",
+      "file_type": "document",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L126",
+      "_origin": "ast",
+      "id": "backup_operations_skill_502_en_health",
+      "community": 4,
+      "norm_label": "502 en health"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude",
+      "community": 1,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "pb-med-postgres-backup \u2014 CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude_pb_med_postgres_backup_claude_md",
+      "community": 1,
+      "norm_label": "pb-med-postgres-backup \u2014 claude.md"
+    },
+    {
+      "label": "Proyecto",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "claude_proyecto",
+      "community": 1,
+      "norm_label": "proyecto"
+    },
+    {
+      "label": "Stack",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "claude_stack",
+      "community": 1,
+      "norm_label": "stack"
+    },
+    {
+      "label": "Arquitectura",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "claude_arquitectura",
+      "community": 1,
+      "norm_label": "arquitectura"
+    },
+    {
+      "label": "Comandos",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "claude_comandos",
+      "community": 1,
+      "norm_label": "comandos"
+    },
+    {
+      "label": "Estructura",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "claude_estructura",
+      "community": 1,
+      "norm_label": "estructura"
+    },
+    {
+      "label": "Modos de operaci\u00f3n",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "claude_modos_de_operaci\u00f3n",
+      "community": 1,
+      "norm_label": "modos de operacion"
+    },
+    {
+      "label": "Cron schedule",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "claude_cron_schedule",
+      "community": 1,
+      "norm_label": "cron schedule"
+    },
+    {
+      "label": "Formato de backup",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "claude_formato_de_backup",
+      "community": 1,
+      "norm_label": "formato de backup"
+    },
+    {
+      "label": "S3 Key format",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "claude_s3_key_format",
+      "community": 1,
+      "norm_label": "s3 key format"
+    },
+    {
+      "label": "Infraestructura Railway",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "claude_infraestructura_railway",
+      "community": 1,
+      "norm_label": "infraestructura railway"
+    },
+    {
+      "label": "Variables de entorno requeridas",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "claude_variables_de_entorno_requeridas",
+      "community": 1,
+      "norm_label": "variables de entorno requeridas"
+    },
+    {
+      "label": "Convenciones de c\u00f3digo",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "claude_convenciones_de_c\u00f3digo",
+      "community": 1,
+      "norm_label": "convenciones de codigo"
+    },
+    {
+      "label": "Retenci\u00f3n",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "claude_retenci\u00f3n",
+      "community": 1,
+      "norm_label": "retencion"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "readme",
+      "community": 3,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "pb-med-postgres-backup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "readme_pb_med_postgres_backup",
+      "community": 3,
+      "norm_label": "pb-med-postgres-backup"
+    },
+    {
+      "label": "Arquitectura",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "readme_arquitectura",
+      "community": 3,
+      "norm_label": "arquitectura"
+    },
+    {
+      "label": "Endpoints",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "readme_endpoints",
+      "community": 3,
+      "norm_label": "endpoints"
+    },
+    {
+      "label": "Uso",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "readme_uso",
+      "community": 3,
+      "norm_label": "uso"
+    },
+    {
+      "label": "Restaurar backup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "readme_restaurar_backup",
+      "community": 3,
+      "norm_label": "restaurar backup"
+    },
+    {
+      "label": "Variables de entorno",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "readme_variables_de_entorno",
+      "community": 3,
+      "norm_label": "variables de entorno"
+    },
+    {
+      "label": "Deploy en Railway",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L92",
+      "_origin": "ast",
+      "id": "readme_deploy_en_railway",
+      "community": 3,
+      "norm_label": "deploy en railway"
+    },
+    {
+      "label": "Desarrollo local",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "readme_desarrollo_local",
+      "community": 3,
+      "norm_label": "desarrollo local"
+    },
+    {
+      "label": "Stack",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "readme_stack",
+      "community": 3,
+      "norm_label": "stack"
+    },
+    {
+      "label": "Jira",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "readme_jira",
+      "community": 3,
+      "norm_label": "jira"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_dev",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "package_dependencies",
+      "target": "package_dependencies_aws_sdk_client_s3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "package_dependencies",
+      "target": "package_dependencies_aws_sdk_s3_request_presigner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "package_dependencies",
+      "target": "package_dependencies_express",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "package_dependencies",
+      "target": "package_dependencies_node_cron",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_buildkey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_dumpandupload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_getlatestbackupurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_listbackups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_s3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_backup_streamdump",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_backup",
+      "target": "src_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_backup_dumpandupload",
+      "target": "src_backup_buildkey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_backup_dumpandupload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_backup_streamdump",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/backup.js",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "src_backup_getlatestbackupurl",
+      "target": "src_backup_listbackups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_backup_listbackups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_backup_getlatestbackupurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/config.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_config",
+      "target": "src_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/config.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_config",
+      "target": "src_config_missing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/config.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_config",
+      "target": "src_config_required",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_index",
+      "target": "src_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/retention.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_retention",
+      "target": "src_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_index",
+      "target": "src_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/retention.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_retention",
+      "target": "src_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/retention.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_retention",
+      "target": "src_retention_cleanoldbackups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/retention.js",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "src_retention",
+      "target": "src_retention_getbackupstats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/retention.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_retention",
+      "target": "src_retention_s3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_retention",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_retention_cleanoldbackups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_retention_getbackupstats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_server_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_server_authenticate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/server.js",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "src_server",
+      "target": "src_server_startserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer",
+      "target": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_cu\u00e1ndo_invocar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_formato_de_reporte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_instrucciones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_prerequisito",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_repos_relacionados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/agents/graphify-explorer.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "agents_graphify_explorer_graphify_explorer_pro_pb_med_postgres_backup_ops",
+      "target": "agents_graphify_explorer_restricciones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "backup_operations_skill",
+      "target": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_cambiar_schedule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_informacion_del_servicio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_obtener_secret_token",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_operaciones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_troubleshooting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "backup_operations_skill_backup_operations_pb_med_postgres_backup",
+      "target": "backup_operations_skill_ver_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_descargar_ultimo_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_forzar_limpieza",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_health_check_sin_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_listar_backups",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_restaurar_backup_localmente",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_stream_directo_de_pg_dump",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "backup_operations_skill_operaciones",
+      "target": "backup_operations_skill_trigger_backup_manual",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "backup_operations_skill_troubleshooting",
+      "target": "backup_operations_skill_502_en_health",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "backup_operations_skill_troubleshooting",
+      "target": "backup_operations_skill_backup_timeout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".cursor/skills/backup-operations/SKILL.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "backup_operations_skill_troubleshooting",
+      "target": "backup_operations_skill_pg_dump_version_mismatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "claude",
+      "target": "claude_pb_med_postgres_backup_claude_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_arquitectura",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_comandos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_convenciones_de_c\u00f3digo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_cron_schedule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_estructura",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_formato_de_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_infraestructura_railway",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_modos_de_operaci\u00f3n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_proyecto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_retenci\u00f3n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_s3_key_format",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_stack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "claude_pb_med_postgres_backup_claude_md",
+      "target": "claude_variables_de_entorno_requeridas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "readme",
+      "target": "readme_pb_med_postgres_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_arquitectura",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_deploy_en_railway",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_desarrollo_local",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_endpoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_jira",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_restaurar_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_stack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_uso",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "readme_pb_med_postgres_backup",
+      "target": "readme_variables_de_entorno",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "677b3aa45a205f9530d3eaff359c94e9f66f186f"
+}
