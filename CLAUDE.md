@@ -47,7 +47,7 @@ railway.toml      # Builder DOCKERFILE + startCommand
 ## Cron schedule
 - Default: `0 7 * * 1` = cada lunes 7:00 UTC = 2:00 AM Colombia
 - Configurable vía `CRON_SCHEDULE`
-- Timezone: `America/Bogota`
+- Timezone: Medellín / Colombia (`America/Bogota` — IANA oficial)
 
 ## Formato de backup
 - `pg_dump -Fc` (formato custom de PostgreSQL, no texto plano)
@@ -80,7 +80,7 @@ Ejemplo: `postgres/pb-med-prod-2026-07-04T17-30-07-044Z.dump`
 - Sin semicolons, single quotes (Prettier defaults)
 - Funciones exportadas individualmente (no clases)
 - Logs con `console.log` / `console.error` (servicio simple, sin Pino)
-- Timezone: `America/Bogota`
+- Timezone: Medellín / Colombia (`America/Bogota` — IANA oficial)
 
 ## Retención
 - Default: 30 días (`BACKUP_RETENTION_DAYS`)

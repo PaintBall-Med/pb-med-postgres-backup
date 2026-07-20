@@ -90,7 +90,7 @@ pg_restore -l latest.dump
 1. Editar `CRON_SCHEDULE` en Railway (`railway variables set 'CRON_SCHEDULE=...'`)
 2. Tambien actualizar el default en `src/config.js` para que coincida
 3. Redeploy: `railway up --detach` o push a GitHub
-4. Verificar en logs: `railway logs` — debe mostrar `Cron scheduled: "..." (America/Bogota)`
+4. Verificar en logs: `railway logs` — debe mostrar `Cron scheduled: "..." (Medellín / America/Bogota)`
 
 Expresiones cron comunes:
 

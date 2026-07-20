@@ -26,7 +26,7 @@ alwaysApply: true
 - JavaScript puro ES modules (sin TypeScript)
 - Sin semicolons, single quotes
 - Logs con `console.log` / `console.error` (no Pino)
-- Timezone: `America/Bogota`
+- Timezone: Medellín / Colombia (`America/Bogota` — IANA oficial)
 
 ## Archivos clave
 

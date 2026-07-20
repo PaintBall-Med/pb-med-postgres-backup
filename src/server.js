@@ -96,7 +96,7 @@ export function startServer() {
           console.error('[cron] Scheduled backup failed:', err.message)
         }
       }, { timezone: 'America/Bogota' })
-      console.log(`Cron scheduled: "${config.cronSchedule}" (America/Bogota)`)
+      console.log(`Cron scheduled: "${config.cronSchedule}" (Medellín / America/Bogota)`)
     } else {
       console.warn(`Invalid CRON_SCHEDULE: "${config.cronSchedule}" — cron disabled`)
     }
