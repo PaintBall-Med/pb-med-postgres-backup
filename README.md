@@ -117,3 +117,5 @@ npm run dev             # Inicia con --watch
 ## Jira
 
 Epic: [SCRUM-318](https://paintballmedellin.atlassian.net/browse/SCRUM-318) (Finalizado)
+
+<!-- Push connectivity check from paintball workstation: 2026-08-09 -->
