@@ -79,26 +79,37 @@ app.delete('/backup/cleanup', authenticate, async (req, res) => {
   }
 })
 
-export function startServer() {
-  app.listen(config.port, () => {
-    console.log(`Backup API listening on port ${config.port} (mode: ${config.mode})`)
+async function runScheduledBackup() {
+  console.log(`[cron] Starting scheduled backup at ${new Date().toISOString()}`)
+  try {
+    const result = await dumpAndUpload()
+    const cleanup = await cleanOldBackups()
+    console.log(
+      `[cron] Backup complete: ${result.key} (${(result.size / 1024 / 1024).toFixed(2)} MB) | cleanup: ${cleanup.deleted} deleted, ${cleanup.remaining} remaining`
+    )
+  } catch (err) {
+    console.error('[cron] Scheduled backup failed:', err.message)
+  }
+}
 
-    if (cron.validate(config.cronSchedule)) {
-      cron.schedule(config.cronSchedule, async () => {
-        console.log(`[cron] Starting scheduled backup at ${new Date().toISOString()}`)
-        try {
-          const result = await dumpAndUpload()
-          const cleanup = await cleanOldBackups()
-          console.log(
-            `[cron] Backup complete: ${result.key} (${(result.size / 1024 / 1024).toFixed(2)} MB) | cleanup: ${cleanup.deleted} deleted, ${cleanup.remaining} remaining`
-          )
-        } catch (err) {
-          console.error('[cron] Scheduled backup failed:', err.message)
-        }
-      }, { timezone: 'America/Bogota' })
-      console.log(`Cron scheduled: "${config.cronSchedule}" (Medellín / America/Bogota)`)
-    } else {
-      console.warn(`Invalid CRON_SCHEDULE: "${config.cronSchedule}" — cron disabled`)
-    }
+/**
+ * Devuelve el server http y la tarea de cron para que los tests puedan cerrar
+ * ambos; en producción index.js ignora el retorno.
+ */
+export function startServer() {
+  const server = app.listen(config.port, () => {
+    console.log(`Backup API listening on port ${server.address().port} (mode: ${config.mode})`)
   })
+
+  let cronTask = null
+  if (cron.validate(config.cronSchedule)) {
+    cronTask = cron.schedule(config.cronSchedule, runScheduledBackup, {
+      timezone: 'America/Bogota',
+    })
+    console.log(`Cron scheduled: "${config.cronSchedule}" (Medellín / America/Bogota)`)
+  } else {
+    console.warn(`Invalid CRON_SCHEDULE: "${config.cronSchedule}" — cron disabled`)
+  }
+
+  return { server, cronTask }
 }
