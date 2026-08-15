@@ -2,9 +2,9 @@ name: Backup Service CI
 
 on:
   pull_request:
-    branches: [main, devqatesting]
+    branches: [main, dev]
   push:
-    branches: [main, devqatesting]
+    branches: [main, dev]
 
 concurrency:
   group: backup-ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
