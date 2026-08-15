@@ -1,62 +1,92 @@
 {
   "package.json": {
-    "mtime": 1783802271.3325372,
-    "ast_hash": "14ff11b2cb932e84da56418d55ef4294",
+    "mtime": 1786757479.563543,
+    "seen": 1786759701.6477392,
+    "ast_hash": "8809299a97327f32cb0025a751ffb45d",
     "semantic_hash": ""
   },
   "src/backup.js": {
-    "mtime": 1783802271.3329113,
+    "mtime": 1786310641.8881412,
+    "seen": 1786759701.6477432,
     "ast_hash": "60e92192fdf35e48b42961ef6720b57f",
     "semantic_hash": ""
   },
   "src/config.js": {
-    "mtime": 1783802271.3329687,
+    "mtime": 1786310641.8886254,
+    "seen": 1786759701.6477454,
     "ast_hash": "4d1c3b4decbf4485e91669d03c9f61e7",
     "semantic_hash": ""
   },
   "src/index.js": {
-    "mtime": 1783802271.3329687,
+    "mtime": 1786310641.8886254,
+    "seen": 1786759701.6477468,
     "ast_hash": "05a2157f75665d4ec28805cd95c5f3d1",
     "semantic_hash": ""
   },
   "src/retention.js": {
-    "mtime": 1783802271.3330464,
+    "mtime": 1786310641.8886254,
+    "seen": 1786759701.6477478,
     "ast_hash": "0b29e7378bc7a44c122b8e5123b1d62c",
     "semantic_hash": ""
   },
   "src/server.js": {
-    "mtime": 1784561492.4031317,
-    "ast_hash": "b147ff137b1b29da1e8299dded58daee",
+    "mtime": 1786757479.5636523,
+    "seen": 1786759701.647749,
+    "ast_hash": "52cba65d5c027b4bcc811a2ea4f63989",
     "semantic_hash": ""
   },
   ".cursor/agents/graphify-explorer.md": {
-    "mtime": 1783802271.3309212,
+    "mtime": 1786310641.886714,
+    "seen": 1786759701.647752,
     "ast_hash": "90aea7bf21cf587f19d467b96f97b46b",
     "semantic_hash": ""
   },
   ".cursor/skills/backup-operations/SKILL.md": {
-    "mtime": 1784561499.322229,
+    "mtime": 1786310641.8868744,
+    "seen": 1786759701.6477532,
     "ast_hash": "838c47c0f44e7db21ba5fa41e0d6919b",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1784561500.1977942,
+    "mtime": 1786310641.8868744,
+    "seen": 1786759701.647755,
     "ast_hash": "57a45cb0c3013befce5e269046d7dcad",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1783802271.3316891,
-    "ast_hash": "c27f31b7967d0a608213001c02178c64",
+    "mtime": 1786319950.755198,
+    "seen": 1786759701.6477559,
+    "ast_hash": "df5ff989606274aa03ddc9497ef12030",
     "semantic_hash": ""
   },
   "docs/campaigns-restore-contract.md": {
-    "mtime": 1785993110.86557,
+    "mtime": 1786743723.2681983,
+    "seen": 1786759701.6477568,
     "ast_hash": "72df8b848b7b7330228bb98284bcbb8f",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md": {
-    "mtime": 1785992986.3960657,
+    "mtime": 1786743723.270741,
+    "seen": 1786759701.6477575,
     "ast_hash": "d5a8375f5b695d29eb54ba690137a4f0",
+    "semantic_hash": ""
+  },
+  "tests/auth.test.js": {
+    "mtime": 1786757479.5637615,
+    "seen": 1786759701.64775,
+    "ast_hash": "3d16e9b83f6432afe1f0a1e53ea21455",
+    "semantic_hash": ""
+  },
+  "tests/config.test.js": {
+    "mtime": 1786757479.5638306,
+    "seen": 1786759701.6477509,
+    "ast_hash": "a88fd856e10cc2f9bb405e56016de28c",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1786757639.9166703,
+    "seen": 1786759701.647754,
+    "ast_hash": "c115b39e39c2bf6a47a9d5ed90545978",
     "semantic_hash": ""
   }
 }

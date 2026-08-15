@@ -1,12 +1,14 @@
 {
-  "0": "Community 0",
-  "1": "Community 1",
-  "2": "Community 2",
-  "3": "Community 3",
-  "4": "Community 4",
-  "5": "Community 5",
-  "6": "Community 6",
+  "0": "server.js",
+  "1": "pb-med-postgres-backup — CLAUDE.md",
+  "2": "package.json",
+  "3": "pb-med-postgres-backup",
+  "4": "Backup Operations — pb-med-postgres-backup",
+  "5": "dependencies",
+  "6": "Graphify Explorer Pro — pb-med-postgres-backup (Ops)",
   "7": "Operaciones",
   "8": "Campaigns CRM — contrato de restore del servicio de backups",
-  "9": "Q: Backup service restore contract"
+  "9": "Q: Backup service restore contract",
+  "10": "config.test.js",
+  "11": "node-cron"
 }

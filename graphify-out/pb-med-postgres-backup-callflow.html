@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pb-med-postgres-backup — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>pb-med-postgres-backup — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 110 nodes, 121 edges, 12 communities. Commit: f4fbe64</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#analysis-clustering">Analysis &amp; Clustering</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#tests-fixtures">Tests &amp; Fixtures</a>
+    <a href="#pb-med-postgres-backup">pb-med-postgres-backup</a>
+    <a href="#graphify-explorer-pro-pb-med-postgres-backup-ops">Graphify Explorer Pro — pb-med-postgres-backup (Ops)</a>
+    <a href="#campaigns-crm-contrato-de-restore-del-servicio-d">Campaigns CRM — contrato de restore del servicio de backups</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>20 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>4 nodes</small>")
+    class ANALYSIS_CLUSTERING_C79796DA module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>33 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>29 nodes</small>")
+    class TESTS_FIXTURES_B84B1DCC module;
+    PB_MED_POSTGRES_BACKUP_638D2CAD("pb-med-postgres-backup<br/><small>11 nodes</small>")
+    class PB_MED_POSTGRES_BACKUP_638D2CAD module;
+    GRAPHIFY_EXPLORER_PRO_PB_MED_POSTGRES_BACKUP_OPS_E0ADC083("Graphify Explorer Pro — pb-med-postgres-backup (Ops)<br/><small>8 nodes</small>")
+    class GRAPHIFY_EXPLORER_PRO_PB_MED_POSTGRES_BACKUP_OPS_E0ADC083 module;
+    CAMPAIGNS_CRM_CONTRATO_DE_RESTORE_DEL_SERVICIO_D_6E395D70("Campaigns CRM — contrato de restore del servicio de backups<br/><small>5 nodes</small>")
+    class CAMPAIGNS_CRM_CONTRATO_DE_RESTORE_DEL_SERVICIO_D_6E395D70 module;
+    BUILD_GRAPH_321CBB04 -.-> ANALYSIS_CLUSTERING_C79796DA
+    ANALYSIS_CLUSTERING_C79796DA -.-> CLI_SKILLS_9964CBB8
+    CLI_SKILLS_9964CBB8 -.-> TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -.-> PB_MED_POSTGRES_BACKUP_638D2CAD
+    PB_MED_POSTGRES_BACKUP_638D2CAD -.-> GRAPHIFY_EXPLORER_PRO_PB_MED_POSTGRES_BACKUP_OPS_E0ADC083
+    GRAPHIFY_EXPLORER_PRO_PB_MED_POSTGRES_BACKUP_OPS_E0ADC083 -.-> CAMPAIGNS_CRM_CONTRATO_DE_RESTORE_DEL_SERVICIO_D_6E395D70
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>20</td><td><code>2, 5, 11</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>4</td><td><code>9</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>33</td><td><code>1, 4, 7</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>29</td><td><code>0, 10</code></td></tr><tr><td>pb-med-postgres-backup</td><td>11</td><td><code>3</code></td></tr><tr><td>Graphify Explorer Pro — pb-med-postgres-backup (Ops)</td><td>8</td><td><code>6</code></td></tr><tr><td>Campaigns CRM — contrato de restore del servicio de backups</td><td>5</td><td><code>8</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Graph Build -&gt; Analysis &amp; Clustering -&gt; CLI &amp; Skill Installers -&gt; Tests &amp; Fixtures -&gt; pb-med-postgres-backup -&gt; Graphify Explorer Pro — pb-med-postgres-backup (Ops) -&gt; Campaigns CRM — contrato de restore del servicio de backups</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>110 nodes · 121 edges · 12 communities</li>
+      <li>Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `pb-med-postgres-backup — CLAUDE.md` - 14 edges</li>
+      <li>2. `pb-med-postgres-backup` - 10 edges</li>
+      <li>3. `Operaciones` - 8 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around packagejson, aws, sdk, node, mostly in package.json, node-cron. This section covers 20 nodes and 18 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (20 nodes, 18 edges)
+    subgraph build_graph_package_json_4e40bfbd["package.json"]
+        package_dependencies_aws_sdk_client_s3_4516b173("@aws-sdk/client-s3<br/><small>package.json</small>")
+        package_dependencies_aws_sdk_s3_request_presigne_e08b7c42("@aws-sdk/s3-request-presigner<br/><small>package.json</small>")
+        package_dependencies_express_ada56cce("express<br/><small>package.json</small>")
+        package_dependencies_node_cron_33374856("node-cron<br/><small>package.json</small>")
+        aws_sdk_client_s3_000cfd60("@aws-sdk/client-s3<br/><small>package.json</small>")
+        aws_sdk_s3_request_presigner_cb27ad41("@aws-sdk/s3-request-presigner<br/><small>package.json</small>")
+        express_f3c62de4("express<br/><small>package.json</small>")
+        package_json_node_cron_19b6dc10("node-cron<br/><small>package.json</small>")
+        package_dependencies_c512ca5e("dependencies<br/><small>package.json</small>")
+        package_description_1bccacf3("description<br/><small>package.json</small>")
+        package_scripts_dev_8c0c97d3("dev<br/><small>package.json</small>")
+        package_main_4e9b6a0e("main<br/><small>package.json</small>")
+        package_name_b23e1232("name<br/><small>package.json</small>")
+        package_582681c2("package.json")
+        package_scripts_25cfc1ca("scripts<br/><small>package.json</small>")
+        package_scripts_start_e2cf302c("start<br/><small>package.json</small>")
+        package_scripts_test_71544dc5("test<br/><small>package.json</small>")
+    end
+    node_cron_node_cron_f2f9a932("node-cron")
+    package_dependencies_aws_sdk_client_s3_4516b173 -->|imports| aws_sdk_client_s3_000cfd60
+    package_dependencies_aws_sdk_s3_request_presigne_e08b7c42 -->|imports| aws_sdk_s3_request_presigner_cb27ad41
+    package_dependencies_express_ada56cce -->|imports| express_f3c62de4
+    package_dependencies_node_cron_33374856 -->|imports| package_json_node_cron_19b6dc10
+    %% Omitted for readability: 2 nodes, 0 edges
+    class package_dependencies_aws_sdk_client_s3_4516b173 entry;
+    class package_dependencies_aws_sdk_s3_request_presigne_e08b7c42 function;
+    class package_dependencies_express_ada56cce function;
+    class package_dependencies_node_cron_33374856 function;
+    class aws_sdk_client_s3_000cfd60 entry;
+    class aws_sdk_s3_request_presigner_cb27ad41 function;
+    class express_f3c62de4 function;
+    class package_json_node_cron_19b6dc10 function;
+    class package_dependencies_c512ca5e function;
+    class package_description_1bccacf3 function;
+    class package_scripts_dev_8c0c97d3 function;
+    class package_main_4e9b6a0e function;
+    class package_name_b23e1232 function;
+    class package_582681c2 function;
+    class package_scripts_25cfc1ca function;
+    class package_scripts_start_e2cf302c function;
+    class package_scripts_test_71544dc5 function;
+    class node_cron_node_cron_f2f9a932 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>package.json node in package.json.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>description</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>description node in package.json.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>main</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>main node in package.json.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>name</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>name node in package.json.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>scripts</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>scripts node in package.json.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>dev</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dev node in package.json.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>start</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>start node in package.json.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>test</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>type</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>type node in package.json.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>version</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>version node in package.json.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>dependencies</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dependencies node in package.json.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>@aws-sdk/client-s3</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-cmd">Entry</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@aws-sdk/client-s3</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>@aws-sdk/client-s3 node in package.json.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>@aws-sdk/s3-request-presigner</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@aws-sdk/s3-request-presigner</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>@aws-sdk/s3-request-presigner node in package.json.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>express</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>express</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>express node in package.json.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>node-cron</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>node-cron</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>node-cron node in package.json.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>@aws-sdk/client-s3</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-cmd">Entry</span></td>
+  <td><code>@aws-sdk/client-s3</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>@aws-sdk/client-s3 node in package.json.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>@aws-sdk/s3-request-presigner</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>@aws-sdk/s3-request-presigner</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>@aws-sdk/s3-request-presigner node in package.json.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>express</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>express</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>express node in package.json.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>node-cron</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>node-cron</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>node-cron node in package.json.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>node-cron</code><br><small style="color:var(--muted)">node-cron</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>node-cron node in node-cron.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>package.json</code></td><td>19 nodes</td></tr>
+<tr><td><code>node-cron</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x14, imports x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. Analysis & Clustering ====== -->
+<h2 id="analysis-clustering">3. Analysis &amp; Clustering</h2>
+<p>Analysis &amp; Clustering groups implementation around backup, service, restore, query, mostly in graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md. This section covers 4 nodes and 3 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Analysis &amp; Clustering (4 nodes, 3 edges)
+    graphify_out_memory_query_20260806_050946_backup_ec2fa843("Q: Backup service restore contract<br/><small>graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small>")
+    graphify_out_memory_query_20260806_050946_backup_fc236538("service restore contract.md<br/><small>graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small>")
+    graphify_out_memory_query_20260806_050946_backup_486b4038("Answer<br/><small>graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small>")
+    graphify_out_memory_query_20260806_050946_backup_631da65c("Source Nodes<br/><small>graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small>")
+    graphify_out_memory_query_20260806_050946_backup_fc236538 -->|contains| graphify_out_memory_query_20260806_050946_backup_ec2fa843
+    graphify_out_memory_query_20260806_050946_backup_ec2fa843 -->|contains| graphify_out_memory_query_20260806_050946_backup_486b4038
+    graphify_out_memory_query_20260806_050946_backup_ec2fa843 -->|contains| graphify_out_memory_query_20260806_050946_backup_631da65c
+    class graphify_out_memory_query_20260806_050946_backup_ec2fa843 concept;
+    class graphify_out_memory_query_20260806_050946_backup_fc236538 concept;
+    class graphify_out_memory_query_20260806_050946_backup_486b4038 concept;
+    class graphify_out_memory_query_20260806_050946_backup_631da65c concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>query_20260806_050946_backup_service_restore_contract.md</code><br><small style="color:var(--muted)">graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing query_20260806_050946_backup_service_restore_contract.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Answer</code><br><small style="color:var(--muted)">graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Answer.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Q: Backup service restore contract</code><br><small style="color:var(--muted)">graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Q: Backup service restore contract.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Source Nodes</code><br><small style="color:var(--muted)">graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Source Nodes.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>graphify-out/memory/query_20260806_050946_backup_service_restore_contract.md</code></td><td>4 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">4. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around backup, skillmd, operations, cursor, mostly in skills/backup-operations/SKILL.md, CLAUDE.md. This section covers 33 nodes and 31 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (33 nodes, 31 edges)
+    subgraph cli_skills_CLAUDE_md_27387765["CLAUDE.md"]
+        claude_pb_med_postgres_backup_claude_md_183b67a9("pb-med-postgres-backup — CLAUDE.md")
+        claude_f1dda22f("CLAUDE.md")
+        claude_arquitectura_aa463800("Arquitectura<br/><small>CLAUDE.md</small>")
+        claude_comandos_6e1e4f5d("Comandos<br/><small>CLAUDE.md</small>")
+        claude_convenciones_de_c_digo_16016dd9("Convenciones de código<br/><small>CLAUDE.md</small>")
+        claude_cron_schedule_144250c1("Cron schedule<br/><small>CLAUDE.md</small>")
+        claude_estructura_b7b50676("Estructura<br/><small>CLAUDE.md</small>")
+        claude_formato_de_backup_65eb2c7f("Formato de backup<br/><small>CLAUDE.md</small>")
+        claude_infraestructura_railway_dcc97a60("Infraestructura Railway<br/><small>CLAUDE.md</small>")
+        claude_modos_de_operaci_n_1d4130e1("Modos de operación<br/><small>CLAUDE.md</small>")
+        claude_proyecto_c7275514("Proyecto<br/><small>CLAUDE.md</small>")
+        claude_retenci_n_5f823f62("Retención<br/><small>CLAUDE.md</small>")
+        claude_s3_key_format_c363d366("S3 Key format<br/><small>CLAUDE.md</small>")
+        claude_stack_25d9a6a6("Stack<br/><small>CLAUDE.md</small>")
+    end
+    subgraph cli_skills_skills_backup_operations_SKILL_md_c862f981["skills/backup-operations/SKILL.md"]
+        cursor_skills_backup_operations_skill_operacione_ea76045c("Operaciones<br/><small>skills/backup-operations/SKILL.md</small>")
+        cursor_skills_backup_operations_skill_backup_ope_dcfd2f6e("Backup Operations — pb-med-postgres-backup<br/><small>skills/backup-operations/SKILL.md</small>")
+        cursor_skills_backup_operations_skill_troublesho_f054d3de("Troubleshooting<br/><small>skills/backup-operations/SKILL.md</small>")
+        cursor_skills_backup_operations_skill_0a4e0f26("SKILL.md")
+    end
+    claude_f1dda22f -->|contains| claude_pb_med_postgres_backup_claude_md_183b67a9
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_arquitectura_aa463800
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_comandos_6e1e4f5d
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_proyecto_c7275514
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_estructura_b7b50676
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_modos_de_operaci_n_1d4130e1
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_cron_schedule_144250c1
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_formato_de_backup_65eb2c7f
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_s3_key_format_c363d366
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_stack_25d9a6a6
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_infraestructura_railway_dcc97a60
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_convenciones_de_c_digo_16016dd9
+    claude_pb_med_postgres_backup_claude_md_183b67a9 -->|contains| claude_retenci_n_5f823f62
+    cursor_skills_backup_operations_skill_0a4e0f26 -->|contains| cursor_skills_backup_operations_skill_backup_ope_dcfd2f6e
+    cursor_skills_backup_operations_skill_backup_ope_dcfd2f6e -->|contains| cursor_skills_backup_operations_skill_troublesho_f054d3de
+    cursor_skills_backup_operations_skill_backup_ope_dcfd2f6e -->|contains| cursor_skills_backup_operations_skill_operacione_ea76045c
+    %% Omitted for readability: 15 nodes, 0 edges
+    class claude_pb_med_postgres_backup_claude_md_183b67a9 concept;
+    class claude_f1dda22f concept;
+    class claude_arquitectura_aa463800 concept;
+    class claude_comandos_6e1e4f5d concept;
+    class claude_convenciones_de_c_digo_16016dd9 concept;
+    class claude_cron_schedule_144250c1 concept;
+    class claude_estructura_b7b50676 concept;
+    class claude_formato_de_backup_65eb2c7f concept;
+    class claude_infraestructura_railway_dcc97a60 concept;
+    class claude_modos_de_operaci_n_1d4130e1 concept;
+    class claude_proyecto_c7275514 concept;
+    class claude_retenci_n_5f823f62 concept;
+    class claude_s3_key_format_c363d366 concept;
+    class claude_stack_25d9a6a6 concept;
+    class cursor_skills_backup_operations_skill_operacione_ea76045c concept;
+    class cursor_skills_backup_operations_skill_backup_ope_dcfd2f6e concept;
+    class cursor_skills_backup_operations_skill_troublesho_f054d3de concept;
+    class cursor_skills_backup_operations_skill_0a4e0f26 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>CLAUDE.md</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing CLAUDE.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Arquitectura</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Arquitectura.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Comandos</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Comandos.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Convenciones de código</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Convenciones de código.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Cron schedule</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Cron schedule.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Estructura</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Estructura.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Formato de backup</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Formato de backup.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Infraestructura Railway</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Infraestructura Railway.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Modos de operación</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Modos de operación.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>pb-med-postgres-backup — CLAUDE.md</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing pb-med-postgres-backup — CLAUDE.md.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>Proyecto</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Proyecto.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Retención</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Retención.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>S3 Key format</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing S3 Key format.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Stack</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Stack.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>Variables de entorno requeridas</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Variables de entorno requeridas.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>SKILL.md</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing SKILL.md.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>502 en health</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 502 en health.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Backup Operations — pb-med-postgres-backup</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Backup Operations — pb-med-postgres-backup.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>Backup timeout</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Backup timeout.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>Cambiar schedule</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Cambiar schedule.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>Informacion del servicio</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Informacion del servicio.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>Obtener SECRET_TOKEN</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Obtener SECRET_TOKEN.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>pg_dump version mismatch</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing pg_dump version mismatch.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Troubleshooting</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Troubleshooting.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>Ver logs</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Ver logs.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>Descargar ultimo backup</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Descargar ultimo backup.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>Forzar limpieza</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Forzar limpieza.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>Health check (sin auth)</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Health check (sin auth).</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>Listar backups</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Listar backups.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>Operaciones</code><br><small style="color:var(--muted)">skills/backup-operations/SKILL.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Operaciones.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>skills/backup-operations/SKILL.md</code></td><td>18 nodes</td></tr>
+<tr><td><code>CLAUDE.md</code></td><td>15 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x31. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">5. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around backupjs, tests, configjs, serverjs, mostly in src/backup.js, src/server.js, tests/config.test.js. This section covers 29 nodes and 48 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Tests &amp; Fixtures (29 nodes, 48 edges)
+    subgraph tests_fixtures_src_backup_js_433ece92["src/backup.js"]
+        src_backup_325307f2("backup.js")
+        src_backup_dumpandupload_13ad3952("dumpAndUpload()<br/><small>src/backup.js</small>")
+        src_backup_buildkey_d5e35ffa("buildKey()<br/><small>src/backup.js</small>")
+        src_backup_getlatestbackupurl_3d72d650("getLatestBackupUrl()<br/><small>src/backup.js</small>")
+        src_backup_listbackups_39625993("listBackups()<br/><small>src/backup.js</small>")
+        src_backup_streamdump_0a82631f("streamDump()<br/><small>src/backup.js</small>")
+        src_backup_s3_cabf7ccb("s3<br/><small>src/backup.js</small>")
+    end
+    subgraph tests_fixtures_src_config_js_862bd783["src/config.js"]
+        src_config_config_bef496dc("config<br/><small>src/config.js</small>")
+        src_config_f55793b8("config.js")
+        src_config_missing_81407d5e("missing<br/><small>src/config.js</small>")
+    end
+    subgraph tests_fixtures_src_retention_js_851a14a7["src/retention.js"]
+        src_retention_a4a1dc36("retention.js")
+        src_retention_cleanoldbackups_b450ed1f("cleanOldBackups()<br/><small>src/retention.js</small>")
+        src_retention_getbackupstats_9e9b78cc("getBackupStats()<br/><small>src/retention.js</small>")
+    end
+    subgraph tests_fixtures_src_server_js_cda74e08["src/server.js"]
+        src_server_87d42fc7("server.js")
+        src_server_runscheduledbackup_fbd44d12("runScheduledBackup()<br/><small>src/server.js</small>")
+    end
+    subgraph tests_fixtures_tests_config_test_js_e58a19ac["tests/config.test.js"]
+        tests_config_test_loadconfig_aed92443("loadConfig()<br/><small>tests/config.test.js</small>")
+        tests_config_test_execfileasync_68bd491e("execFileAsync<br/><small>tests/config.test.js</small>")
+    end
+    src_index_811cdc82("index.js")
+    src_backup_dumpandupload_13ad3952 -->|calls| src_backup_buildkey_d5e35ffa
+    src_backup_getlatestbackupurl_3d72d650 -->|calls| src_backup_listbackups_39625993
+    src_server_runscheduledbackup_fbd44d12 -->|calls| src_backup_dumpandupload_13ad3952
+    src_server_runscheduledbackup_fbd44d12 -->|calls| src_retention_cleanoldbackups_b450ed1f
+    tests_config_test_loadconfig_aed92443 -->|calls| tests_config_test_execfileasync_68bd491e
+    src_backup_325307f2 -->|imports| src_config_config_bef496dc
+    src_backup_325307f2 -->|imports| src_config_f55793b8
+    src_index_811cdc82 -->|imports| src_config_config_bef496dc
+    src_index_811cdc82 -->|imports| src_config_f55793b8
+    src_retention_a4a1dc36 -->|imports| src_config_config_bef496dc
+    src_retention_a4a1dc36 -->|imports| src_config_f55793b8
+    src_server_87d42fc7 -->|imports| src_config_config_bef496dc
+    src_server_87d42fc7 -->|imports| src_backup_dumpandupload_13ad3952
+    src_server_87d42fc7 -->|imports| src_backup_getlatestbackupurl_3d72d650
+    src_server_87d42fc7 -->|imports| src_backup_listbackups_39625993
+    src_server_87d42fc7 -->|imports| src_backup_streamdump_0a82631f
+    src_server_87d42fc7 -->|imports| src_retention_cleanoldbackups_b450ed1f
+    src_server_87d42fc7 -->|imports| src_retention_getbackupstats_9e9b78cc
+    src_server_87d42fc7 -->|imports| src_config_f55793b8
+    src_server_87d42fc7 -->|imports| src_backup_325307f2
+    src_server_87d42fc7 -->|imports| src_retention_a4a1dc36
+    %% Omitted for readability: 11 nodes, 0 edges
+    class src_backup_325307f2 module;
+    class src_backup_dumpandupload_13ad3952 function;
+    class src_backup_buildkey_d5e35ffa function;
+    class src_backup_getlatestbackupurl_3d72d650 function;
+    class src_backup_listbackups_39625993 function;
+    class src_backup_streamdump_0a82631f async;
+    class src_backup_s3_cabf7ccb function;
+    class src_config_config_bef496dc function;
+    class src_config_f55793b8 module;
+    class src_config_missing_81407d5e function;
+    class src_retention_a4a1dc36 module;
+    class src_retention_cleanoldbackups_b450ed1f function;
+    class src_retention_getbackupstats_9e9b78cc function;
+    class src_server_87d42fc7 module;
+    class src_server_runscheduledbackup_fbd44d12 function;
+    class tests_config_test_loadconfig_aed92443 test;
+    class tests_config_test_execfileasync_68bd491e test;
+    class src_index_811cdc82 module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>buildKey()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>dumpAndUpload()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>buildKey() node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>dumpAndUpload()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>runScheduledBackup()</code><br><small style="color:var(--muted)">src/server.js</small><br><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><code>buildKey()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td>dumpAndUpload() node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>getLatestBackupUrl()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><code>listBackups()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>listBackups()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>getLatestBackupUrl()</code><br><small style="color:var(--muted)">src/backup.js</small><br><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>listBackups() node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>streamDump()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>streamDump() node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>cleanOldBackups()</code><br><small style="color:var(--muted)">src/retention.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>runScheduledBackup()</code><br><small style="color:var(--muted)">src/server.js</small><br><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>cleanOldBackups() node in src/retention.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>getBackupStats()</code><br><small style="color:var(--muted)">src/retention.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getBackupStats() node in src/retention.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>authenticate()</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>authenticate() node in src/server.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>runScheduledBackup()</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>startServer()</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><code>cleanOldBackups()</code><br><small style="color:var(--muted)">src/retention.js</small><br><code>dumpAndUpload()</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td>runScheduledBackup() node in src/server.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>startServer()</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>runScheduledBackup()</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td>startServer() node in src/server.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>backup.js</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><code>config</code><br><small style="color:var(--muted)">src/config.js</small><br><code>config.js</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td>backup.js node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>s3</code><br><small style="color:var(--muted)">src/backup.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>s3 node in src/backup.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>config.js</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>backup.js</code><br><small style="color:var(--muted)">src/backup.js</small><br><code>index.js</code><br><small style="color:var(--muted)">src/index.js</small><br><code>retention.js</code><br><small style="color:var(--muted)">src/retention.js</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>config</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>backup.js</code><br><small style="color:var(--muted)">src/backup.js</small><br><code>index.js</code><br><small style="color:var(--muted)">src/index.js</small><br><code>retention.js</code><br><small style="color:var(--muted)">src/retention.js</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>missing</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>missing node in src/config.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>required</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>required node in src/config.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>index.js</code><br><small style="color:var(--muted)">src/index.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>config</code><br><small style="color:var(--muted)">src/config.js</small><br><code>config.js</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td>index.js node in src/index.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>retention.js</code><br><small style="color:var(--muted)">src/retention.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><code>config</code><br><small style="color:var(--muted)">src/config.js</small><br><code>config.js</code><br><small style="color:var(--muted)">src/config.js</small></td>
+  <td>retention.js node in src/retention.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>s3</code><br><small style="color:var(--muted)">src/retention.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>s3 node in src/retention.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>server.js</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>authenticate()</code><br><small style="color:var(--muted)">src/server.js</small><br><code>backup.js</code><br><small style="color:var(--muted)">src/backup.js</small><br><code>cleanOldBackups()</code><br><small style="color:var(--muted)">src/retention.js</small><br>+8 more</td>
+  <td>server.js node in src/server.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>app</code><br><small style="color:var(--muted)">src/server.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>app node in src/server.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>auth.test.js</code><br><small style="color:var(--muted)">tests/auth.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>{ server, cronTask }</code><br><small style="color:var(--muted)">tests/auth.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>{ server, cronTask } node in tests/auth.test.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>loadConfig()</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>execFileAsync</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>./src/config.js</code><br><small style="color:var(--muted)">tests/src/config.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>config.test.js</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>execFileAsync</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>loadConfig()</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>execFileAsync node in tests/config.test.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>root</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in tests/config.test.js.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>VALID_ENV</code><br><small style="color:var(--muted)">tests/config.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>VALID_ENV node in tests/config.test.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/backup.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>src/server.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>tests/config.test.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>src/config.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>src/retention.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>tests/auth.test.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/index.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>tests/src/config.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x20, imports x10, imports x6, calls x5. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. pb-med-postgres-backup ====== -->
+<h2 id="pb-med-postgres-backup">6. pb-med-postgres-backup</h2>
+<p>pb-med-postgres-backup groups implementation around readmemd, backup, arquitectura, deploy, mostly in README.md. This section covers 11 nodes and 10 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: pb-med-postgres-backup (11 nodes, 10 edges)
+    readme_pb_med_postgres_backup_42c506ea("pb-med-postgres-backup<br/><small>README.md</small>")
+    readme_f78a71af("README.md")
+    readme_desarrollo_local_b4a0d270("Desarrollo local<br/><small>README.md</small>")
+    readme_stack_77a60f74("Stack<br/><small>README.md</small>")
+    readme_jira_0e3c184f("Jira<br/><small>README.md</small>")
+    readme_endpoints_c5e52519("Endpoints<br/><small>README.md</small>")
+    readme_arquitectura_ba1e3ed1("Arquitectura<br/><small>README.md</small>")
+    readme_deploy_en_railway_bf6853c8("Deploy en Railway<br/><small>README.md</small>")
+    readme_restaurar_backup_b0a15fee("Restaurar backup<br/><small>README.md</small>")
+    readme_uso_b161d801("Uso<br/><small>README.md</small>")
+    readme_variables_de_entorno_548f8524("Variables de entorno<br/><small>README.md</small>")
+    readme_f78a71af -->|contains| readme_pb_med_postgres_backup_42c506ea
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_desarrollo_local_b4a0d270
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_stack_77a60f74
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_jira_0e3c184f
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_endpoints_c5e52519
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_uso_b161d801
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_arquitectura_ba1e3ed1
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_restaurar_backup_b0a15fee
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_variables_de_entorno_548f8524
+    readme_pb_med_postgres_backup_42c506ea -->|contains| readme_deploy_en_railway_bf6853c8
+    class readme_pb_med_postgres_backup_42c506ea concept;
+    class readme_f78a71af concept;
+    class readme_desarrollo_local_b4a0d270 concept;
+    class readme_stack_77a60f74 concept;
+    class readme_jira_0e3c184f concept;
+    class readme_endpoints_c5e52519 concept;
+    class readme_arquitectura_ba1e3ed1 concept;
+    class readme_deploy_en_railway_bf6853c8 concept;
+    class readme_restaurar_backup_b0a15fee concept;
+    class readme_uso_b161d801 concept;
+    class readme_variables_de_entorno_548f8524 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>README.md</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing README.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Arquitectura</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Arquitectura.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Deploy en Railway</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Deploy en Railway.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Desarrollo local</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Desarrollo local.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Endpoints</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Endpoints.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Jira</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Jira.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>pb-med-postgres-backup</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing pb-med-postgres-backup.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Restaurar backup</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Restaurar backup.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Stack</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Stack.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>Uso</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Uso.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>Variables de entorno</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Variables de entorno.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>README.md</code></td><td>11 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x10. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Graphify Explorer Pro — pb-med-postgres-backup (Ops) ====== -->
+<h2 id="graphify-explorer-pro-pb-med-postgres-backup-ops">7. Graphify Explorer Pro — pb-med-postgres-backup (Ops)</h2>
+<p>Graphify Explorer Pro — pb-med-postgres-backup (Ops) groups implementation around graphify, explorermd, cursor, agents, mostly in .cursor/agents/graphify-explorer.md. This section covers 8 nodes and 7 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graphify Explorer Pro — pb-med-postgres-backup (Ops) (8 nodes, 7 edges)
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708("Graphify Explorer Pro — pb-med-postgres...<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_d055b5eb("graphify-explorer.md")
+    cursor_agents_graphify_explorer_cu_ndo_invocar_6bd88aa9("Cuándo invocar<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_prerequisito_23be4e26("Prerequisito<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_instrucciones_30eb8544("Instrucciones<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_repos_relacionad_dc96cc67("Repos relacionados<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_formato_de_repor_7cc7c6f7("Formato de reporte<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_restricciones_402bbd94("Restricciones<br/><small>.cursor/agents/graphify-explorer.md</small>")
+    cursor_agents_graphify_explorer_d055b5eb -->|contains| cursor_agents_graphify_explorer_graphify_explore_eb1bb708
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_cu_ndo_invocar_6bd88aa9
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_prerequisito_23be4e26
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_instrucciones_30eb8544
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_repos_relacionad_dc96cc67
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_formato_de_repor_7cc7c6f7
+    cursor_agents_graphify_explorer_graphify_explore_eb1bb708 -->|contains| cursor_agents_graphify_explorer_restricciones_402bbd94
+    class cursor_agents_graphify_explorer_graphify_explore_eb1bb708 concept;
+    class cursor_agents_graphify_explorer_d055b5eb concept;
+    class cursor_agents_graphify_explorer_cu_ndo_invocar_6bd88aa9 concept;
+    class cursor_agents_graphify_explorer_prerequisito_23be4e26 concept;
+    class cursor_agents_graphify_explorer_instrucciones_30eb8544 concept;
+    class cursor_agents_graphify_explorer_repos_relacionad_dc96cc67 concept;
+    class cursor_agents_graphify_explorer_formato_de_repor_7cc7c6f7 concept;
+    class cursor_agents_graphify_explorer_restricciones_402bbd94 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>graphify-explorer.md</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing graphify-explorer.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Cuándo invocar</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Cuándo invocar.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Formato de reporte</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Formato de reporte.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Graphify Explorer Pro — pb-med-postgres-backup (Ops)</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Graphify Explorer Pro — pb-med-postgres-backup (Ops).</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Instrucciones</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Instrucciones.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Prerequisito</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Prerequisito.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Repos relacionados</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Repos relacionados.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Restricciones</code><br><small style="color:var(--muted)">.cursor/agents/graphify-explorer.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Restricciones.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>.cursor/agents/graphify-explorer.md</code></td><td>8 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x7. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Campaigns CRM — contrato de restore del servicio de backups ====== -->
+<h2 id="campaigns-crm-contrato-de-restore-del-servicio-d">8. Campaigns CRM — contrato de restore del servicio de backups</h2>
+<p>Campaigns CRM — contrato de restore del servicio de backups groups implementation around campaigns, restore, contractmd, docs, mostly in docs/campaigns-restore-contract.md. This section covers 5 nodes and 4 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Campaigns CRM — contrato de restore del servicio de backups (5 nodes, 4 edges)
+    docs_campaigns_restore_contract_campaigns_crm_co_901244b0("Campaigns CRM — contrato de restore del...<br/><small>docs/campaigns-restore-contract.md</small>")
+    docs_campaigns_restore_contract_11b77f74("campaigns-restore-contract.md")
+    docs_campaigns_restore_contract_superficie_opera_2c1c5346("Superficie operativa<br/><small>docs/campaigns-restore-contract.md</small>")
+    docs_campaigns_restore_contract_l_mite_de_respon_a51f7ac7("Límite de responsabilidad<br/><small>docs/campaigns-restore-contract.md</small>")
+    docs_campaigns_restore_contract_propiedades_veri_4c91cc72("Propiedades verificables<br/><small>docs/campaigns-restore-contract.md</small>")
+    docs_campaigns_restore_contract_11b77f74 -->|contains| docs_campaigns_restore_contract_campaigns_crm_co_901244b0
+    docs_campaigns_restore_contract_campaigns_crm_co_901244b0 -->|contains| docs_campaigns_restore_contract_superficie_opera_2c1c5346
+    docs_campaigns_restore_contract_campaigns_crm_co_901244b0 -->|contains| docs_campaigns_restore_contract_l_mite_de_respon_a51f7ac7
+    docs_campaigns_restore_contract_campaigns_crm_co_901244b0 -->|contains| docs_campaigns_restore_contract_propiedades_veri_4c91cc72
+    class docs_campaigns_restore_contract_campaigns_crm_co_901244b0 concept;
+    class docs_campaigns_restore_contract_11b77f74 concept;
+    class docs_campaigns_restore_contract_superficie_opera_2c1c5346 concept;
+    class docs_campaigns_restore_contract_l_mite_de_respon_a51f7ac7 concept;
+    class docs_campaigns_restore_contract_propiedades_veri_4c91cc72 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>campaigns-restore-contract.md</code><br><small style="color:var(--muted)">docs/campaigns-restore-contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing campaigns-restore-contract.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Campaigns CRM — contrato de restore del servicio de backups</code><br><small style="color:var(--muted)">docs/campaigns-restore-contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Campaigns CRM — contrato de restore del servicio de backups.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Límite de responsabilidad</code><br><small style="color:var(--muted)">docs/campaigns-restore-contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Límite de responsabilidad.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Propiedades verificables</code><br><small style="color:var(--muted)">docs/campaigns-restore-contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Propiedades verificables.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Superficie operativa</code><br><small style="color:var(--muted)">docs/campaigns-restore-contract.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Superficie operativa.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>docs/campaigns-restore-contract.md</code></td><td>5 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>110</td></tr>
+      <tr><td>Edges</td><td>121</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>12</td></tr>
+      <tr><td>Documented Sections</td><td>7</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>119</td></tr>
+      <tr><td>INFERRED</td><td>2</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>pb-med-postgres-backup — Architecture Documentation</p>
+  <p>Generated: 2026-08-15 02:08 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>
